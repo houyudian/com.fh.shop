@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="admin.mapper.ITypeMapper">
+
+
+<select id="findCount" resultType="long">
+    select count(*) from t_type
+</select>
+    <select id="findType" parameterType="admin.param.TypeParam" resultType="admin.po.Type">
+        select t.* from (select id,typeName from t_type)t
+        limit #{start},#{length}
+    </select>
+
+</mapper>

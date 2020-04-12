@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="admin.mapper.IBrandMapper">
+
+<select id="brandCount" resultType="long">
+    select count(*)from t_brand
+</select>
+<select id="findBrandList" parameterType="admin.param.BrandParam" resultType="admin.po.Brand">
+    select t.* from (select id,brandName,logo,isReconmend from t_brand order by sort)t
+limit #{start},#{length}
+</select>
+
+
+</mapper>

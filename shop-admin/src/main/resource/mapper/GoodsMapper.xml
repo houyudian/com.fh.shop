@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="admin.mapper.goods.IGoodsCommonMapper">
+<sql id="goods">
+    <where>
+        <if test="name!=null and name!=''">
+            name like concat('%',#{name},'%')
+        </if>
+        <if test="brandId !=null and brandId >-1">
+           and brandId=#{brandId}
+        </if>
+    </where>
+</sql>
+
+<select id="findCount" resultType="long">
+    select count(*) from t_goods_common
+    <include refid="goods"></include>
+</select>
+    <select id="findGoodsList" parameterType="admin.param.goods.GoodsSearchParam" resultType="admin.po.goods.GoodsCommon">
+        select t.* from (select id,name,price,stock,brandName,cateName,isHot,status,mainImage from t_goods_common
+        <include refid="goods"></include>
+        order by id desc )t
+        limit #{start},#{length}
+    </select>
+
+    <update id="updateTreeTable">
+        update t_goods_common set cateName=replace(cateName,concat('|',#{oldTreeTable},'|'),concat('|',#{treeTable1},'|'))
+where cateName like concat('%|',#{oldTreeTable},'|%');
+</update>
+    <update id="updateCategory">
+        update t_goods_common set cateName=replace(cateName,concat('|',#{oldCategoryName},'|'),concat('|',#{categoryName},'|'))
+          where cateName like concat('%|',#{oldCategoryName},'|%');
+    </update>
+</mapper>
