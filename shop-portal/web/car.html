@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="shop/bootstrap/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<script type="text/html" id="addCar">
+
+    <form class="form-horizontal" id="carForm">
+        <input type="hidden" name="id" id="carId"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">名称</label>
+            <div class="col-sm-5">
+                <input class="form-control" required maxlength="50" placeholder="请输入车名" type="text"
+                       name="carName" id="carName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">价格</label>
+            <div class="col-sm-5">
+                <input class="form-control" required maxlength="10" placeholder="请输入价格" type="text" name="price"
+                       id="priceCar"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">库存</label>
+            <div class="col-sm-5">
+                <input class="form-control" required maxlength="20" placeholder="请输入库存" type="text" name="stock"
+                       id="stockCar"/>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">汽车条件查询</div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="userSearch">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">汽车名:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="name" id="name"
+                                       placeholder="请输入汽车名...">
+                            </div>
+                            <label class="col-sm-2 control-label">价格范围:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="minPrice" id="minPrice"
+                                           placeholder="开始价格...">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-transfer"></i></span>
+                                    <input type="text" class="form-control" name="maxPrice" id="maxPrice"
+                                           placeholder="结束价格...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="float: right">
+
+                            <label class="col-sm-2 control-label">库存范围:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="minStock" id="minStock"
+                                           placeholder="开始库存...">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-transfer"></i></span>
+                                    <input type="text" class="form-control" name="maxStock" id="maxStock"
+                                           placeholder="结束库存...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center">
+                            <button class="btn btn-primary" type="button" onclick="searchForm();"><i class="glyphicon glyphicon-search"></i>查询</button>
+                            <button class="btn btn-default" type="reset"><i class="glyphicon glyphicon-refresh"></i>重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button type="button" class="btn btn-primary" onclick="toAddCar();"><i class="glyphicon glyphicon-plus"></i>增加</button>
+        <button type="reset" class="btn btn-danger" onclick="deleteBatchCar();"><i class="glyphicon glyphicon-trash"></i>批量删除</button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped" id="carTable">
+                <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>汽车名</th>
+                    <th>价格</th>
+                    <th>库存</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="shop/jquery-3.3.1.js"></script>
+<script src="shop/bootstrap/js/bootstrap.min.js"></script>
+<script src="/shop/bootbox/bootbox.min.js"></script>
+<script src="/shop/bootbox/bootbox.locales.min.js"></script>
+<script>
+$(function () {
+    initCar();
+})
+    function deleteBatchCar(){
+    var idArr=[];
+    $("input[name=ids]:checked").each(function () {
+        idArr.push(this.value);
+    })
+        if (idArr.length>0){
+           var ids=idArr.join(",");
+           $.ajax({
+               type:"delete",
+               url:"http://localhost:8082/cars?ids="+ids,
+               success:function (result) {
+                   if (result.code==200){
+                       search();
+                   }
+               }
+           })
+        }
+    }
+    function initCar() {
+        $.ajax({
+            url:"http://localhost:8082/cars",
+            success:function (result) {
+                if (result.code==200){
+                    var html='';
+                    var carArr=result.data;
+                    if (carArr.length>0){
+                        for (let car of carArr){
+                            html+='<tr><td><input type="checkbox" name="ids" value="'+car.id+'"/></td>' +
+                                '<td>'+car.carName+'</td><td>'+car.price+'</td><td>'+car.stock+'</td>' +
+                                '<td> <button type="button" class="btn btn-warning" onclick="updates(\''+car.id+'\');"><i class="glyphicon glyphicon-pencil"></i>修改</button> ' +
+                                '<button type="button" class="btn btn-danger" onclick="deleteCar(\''+car.id+'\')"><i class="glyphicon glyphicon-trash"></i>删除</button></td></tr>';
+                        }
+                    } else {
+                        html += "<tr><td colspan='4'>没有符合条件的数据！！！</td></tr>"
+                    }
+                    $("#carTable tbody").html(html);
+                }
+            }
+
+        })
+    }
+function deleteCar(id) {
+    $.ajax({
+        type:"delete",
+        url:"http://localhost:8082/cars/"+id,
+        dataType:"json",
+        success:function (result) {
+            if (result.code == 200) {
+                window.location.reload();
+            }
+        }
+    })
+}
+    function toAddCar() {
+        bootbox.confirm({
+            message: $("#addCar").html(),
+            size: "large",
+            title: "新增汽车",
+            buttons: {
+                confirm: {label: '保存', className: 'btn-success'},
+                cancel: {label: '取消', className: 'btn-danger'}
+            },
+            callback: function (result) {
+                if (result) {
+                    console.log($("#carForm").serialize())
+                    $.ajax({
+                        url: "http://localhost:8082/cars",
+                        type: "post",
+                        dataType: "json",
+                        data: $("#carForm").serialize(),
+                        success: function (result) {
+                            alert(result.msg);
+                            window.location.reload();
+                        }, error: function () {
+                            alert("请求添加异常");
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+
+    function updates(id){
+        $.ajax({
+            url: "http://localhost:8082/cars/" + id,
+            type: "get",
+            dataType: "json",
+            success: function (result) {
+                if (result.code == 200) {
+                    var data = result.data;
+                    $("#carId").val(data.id);
+                    $("#carName").val(data.carName);
+                    $("#priceCar").val(data.price);
+                    $("#stockCar").val(data.stock);
+                }
+            }, error: function () {
+                alert("回显异常");
+            }
+        })
+        bootbox.dialog({
+            message: $("#addCar").html(),
+            title: "修改汽车",
+            buttons: {
+                cancel: {
+                    "label": "取消", "className": "btn-danger",
+                }, save: {
+                    "label": "确认", "className": "btn-success",
+                    callback: function () {
+
+                        $.ajax({
+                            url: "http://localhost:8082/cars",
+                            type: "put",
+                            dataType:"json",
+                           //dataType:"application/json;charset=utf-8",
+                            data:$("#carForm").serialize(),
+                            success: function (result) {
+                                if (result.code == 200) {
+                                    bootbox.alert(result.msg);
+                                    window.location.reload();
+                                }
+                            }, error: function () {
+                                alert("修改车异常");
+                            }
+                        })
+                    }
+                }
+            }
+
+        })
+
+    }
+</script>
+</body>
+</html>

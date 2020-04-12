@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="shop/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">用户名</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">密码</label>
+                <div class="col-md-4">
+                    <input type="password" class="form-control" id="pwd">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary" onclick="enter();"><i class="glyphicon glyphicon-ok"></i> 登入</button>
+                    <button type="reset" class="btn btn-default"><i class="glyphicon glyphicon-refresh"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function enter() {
+        var name=$("#name").val();
+        var pwd=$("#pwd").val();
+        $.ajax({
+            url:"http://localhost:8082/login/enter",
+            data:{name:name,pwd:pwd},
+            type:"post",
+            dataType:"json",
+            success:function (result) {
+                if (result.code==200){
+                    location.href="index.html";
+                }else{
+                    alert(result.msg);
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>
