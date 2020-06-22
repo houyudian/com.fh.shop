@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.fh.shop</groupId>
+  <groupId>com.fh</groupId>
   <artifactId>shop-api</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
@@ -23,12 +23,37 @@
     <log4j.version>1.2.17</log4j.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <dependencies>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.aliyun.oss</groupId>
+      <artifactId>aliyun-sdk-oss</artifactId>
+      <version>3.5.0</version>
+    </dependency>
+    <dependency>
+    <groupId>cn.hutool</groupId>
+    <artifactId>hutool-all</artifactId>
+    <version>4.1.19</version>
+  </dependency>
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
       <version>2.9.0</version>
+    </dependency>
+    <dependency >
+      <groupId >com.sun.mail</groupId >
+      <artifactId >javax.mail</artifactId >
+      <version >1.6.0</version >
+    </dependency >
+    <!-- 定时任务框架Quartz的依赖-->
+   <!-- <dependency>
+       <artifactId>quartz</artifactId>
+      <version>${quartz.version}</version>
+    </dependency>-->
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+      <version>2.2.0</version>
     </dependency>
 
     <dependency>
@@ -52,11 +77,6 @@
       <artifactId>druid</artifactId>
       <version>1.0.7</version>
     </dependency>
-
-   <!-- <dependency>
-      <groupId></groupId>
-      <artifactId>lombok</artifactId>
-    </dependency>-->
 
     <dependency>
       <groupId>junit</groupId>
@@ -113,6 +133,11 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
       <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aliyun.oss</groupId>
+      <artifactId>aliyun-sdk-oss</artifactId>
+      <version>3.5.0</version>
     </dependency>
 
     <dependency>
@@ -310,6 +335,7 @@
     </dependency>
 
   </dependencies>
+
   <build>
     <finalName>shop-api</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->

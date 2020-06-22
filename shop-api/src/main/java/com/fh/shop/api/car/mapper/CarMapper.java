@@ -5,6 +5,7 @@ import com.fh.shop.api.car.param.CarSearchParam;
 import com.fh.shop.api.car.po.Car;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CarMapper extends BaseMapper<Car> {
 
@@ -13,5 +14,11 @@ public interface CarMapper extends BaseMapper<Car> {
     int count(CarSearchParam carSearchParam);
 
     void addBatchCar(List<Car> car);
+
+    List<Map> findCarCount();
+
+    List<Map> groupBySaleTime(String yearMonth);
+
+    List<Map> statisticSaleCount(Map<String, String> paramMap);
 
 }

@@ -6,9 +6,9 @@ public class Brand {
     private String brandName;
     private String isReconmend;
     private int sort;
-private String filePath;
-private String lodFilePath;
-private String logo;
+    private String filePath;
+    private String lodFilePath;
+    private String logo;
 
     public String getFilePath() {
         return filePath;

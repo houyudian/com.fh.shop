@@ -1,5 +1,10 @@
 package com.fh.shop.api.car.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Area {
     private Long id;
     private String areaName;
@@ -7,6 +12,17 @@ public class Area {
 
     public Long getId() {
         return id;
+    }
+
+    @TableField(exist = false)
+    private List<Area> childs = new ArrayList<>();
+
+    public List<Area> getChilds() {
+        return childs;
+    }
+
+    public void setChilds(List<Area> childs) {
+        this.childs = childs;
     }
 
     public void setId(Long id) {

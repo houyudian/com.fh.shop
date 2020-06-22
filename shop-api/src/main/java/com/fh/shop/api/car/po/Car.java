@@ -2,9 +2,16 @@ package com.fh.shop.api.car.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Car {
+public class Car implements Serializable {
+    private List<CarItem> carItems = new ArrayList<>();
+    private int totalNum;
+    private String totalPrice;
+
     private Long id;
     private String carName;
     private BigDecimal price;
@@ -13,7 +20,7 @@ public class Car {
     private Long provinceId;
     private Long cityId;
     private Long areaId;
-private String areaName;
+    private String areaName;
 
     private String isHot;
     private String status;
@@ -21,6 +28,31 @@ private String areaName;
     private String brandId;
     @TableField(exist = false)
     private String brandName;
+    private String img;
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public int getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getAreaName() {
         return areaName;
@@ -116,5 +148,13 @@ private String areaName;
 
     public void setStock(Long stock) {
         this.stock = stock;
+    }
+
+    public List<CarItem> getCarItems() {
+        return carItems;
+    }
+
+    public void setCarItems(List<CarItem> carItems) {
+        this.carItems = carItems;
     }
 }

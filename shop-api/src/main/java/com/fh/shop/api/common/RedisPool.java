@@ -7,7 +7,10 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisPool {
 
     private static JedisPool jedisPool;
-    private RedisPool() {}
+
+    private RedisPool() {
+    }
+
     private static void initPool() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(1000);
@@ -17,6 +20,12 @@ public class RedisPool {
         poolConfig.setTestOnReturn(true);
         jedisPool = new JedisPool(poolConfig, "192.168.24.144", 6379);
     }
-    static {initPool();}
-    public static Jedis getResource(){return jedisPool.getResource();}
+
+    static {
+        initPool();
+    }
+
+    public static Jedis getResource() {
+        return jedisPool.getResource();
+    }
 }

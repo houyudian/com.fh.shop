@@ -1,5 +1,7 @@
 package com.fh.shop.api.goods.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -9,11 +11,30 @@ public class Goods implements Serializable {
     private Long commonId;
     private String productName;
     private BigDecimal price;
+    @TableField(exist = false)
+    private String prices;
     private Long stock;
     private String specValueInfos;
     private String specValueId;
     private String isHot;
     private String status;
+    private String mainImage;
+
+    public String getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
+    }
+
+    public String getPrices() {
+        return prices;
+    }
+
+    public void setPrices(String prices) {
+        this.prices = prices;
+    }
 
     public Long getId() {
         return id;

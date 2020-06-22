@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 
 public class CarSearchParam extends Page implements Serializable {
 
-
     private String carName;
 
     private BigDecimal minPrice;

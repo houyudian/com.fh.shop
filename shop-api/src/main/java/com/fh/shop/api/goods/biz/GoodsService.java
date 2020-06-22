@@ -2,7 +2,10 @@ package com.fh.shop.api.goods.biz;
 
 import com.fh.shop.api.common.ServerResponse;
 
-public interface GoodsService  {
+public interface GoodsService {
 
     ServerResponse findHotList();
+
+    ServerResponse queryGoodsList();
+
 }

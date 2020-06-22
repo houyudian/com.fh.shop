@@ -35,7 +35,7 @@ public class HttpClient {
                 httpPut.setEntity(stringEntity);
             }
 
-          //  response = client.execute(httpPut);
+            //  response = client.execute(httpPut);
             //result = EntityUtils.toString(response.getEntity(), "utf-8");
 
         } catch (UnsupportedCharsetException e) {
@@ -100,8 +100,8 @@ public class HttpClient {
                 }
             }
 
-         //   response = client.execute(httpPost);
-           // EntityUtils.toString(response.getEntity(), "utf-8");
+            //   response = client.execute(httpPost);
+            // EntityUtils.toString(response.getEntity(), "utf-8");
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

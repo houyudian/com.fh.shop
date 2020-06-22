@@ -1,5 +1,6 @@
 package com.fh.shop.api.category.controller;
 
+import com.fh.shop.api.annotation.Secure;
 import com.fh.shop.api.category.biz.ICategoryService;
 import com.fh.shop.api.common.ServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class CategoryController {
 
     @ResponseBody
     @RequestMapping("findAllCategory")
+    @Secure
     public ServerResponse findAllCategory() {
         return categoryService.findAllCateList();
     }

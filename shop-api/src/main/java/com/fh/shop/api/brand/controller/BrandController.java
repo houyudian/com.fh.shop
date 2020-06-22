@@ -11,14 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public class BrandController {
     @Autowired
     private BrandService brandService;
-    @RequestMapping(value = "findReconmendBrand",method = RequestMethod.GET)
-    public ServerResponse findReconmendBrand(){
+
+    @RequestMapping(value = "findReconmendBrand", method = RequestMethod.GET)
+    public ServerResponse findReconmendBrand() {
         return brandService.findReconmendBrand();
     }
+
     @GetMapping("findAllBrand")
-    public ServerResponse findAllBrand(){
+    public ServerResponse findAllBrand() {
         return brandService.findAllBrand();
     }
-
 
 }

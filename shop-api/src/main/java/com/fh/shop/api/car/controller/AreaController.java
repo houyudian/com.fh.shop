@@ -16,8 +16,13 @@ public class AreaController {
     private AreaService areaService;
 
     @GetMapping
-    public ServerResponse findAreaList(Long id){
+    public ServerResponse findAreaList(Long id) {
         return areaService.findAreaList(id);
+    }
+
+    @GetMapping("areaTree")
+    public ServerResponse areaTree() {
+        return areaService.findAreaTree();
     }
 
 }

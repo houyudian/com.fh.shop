@@ -15,24 +15,24 @@ import java.util.List;
 
 @Service
 public class BrandServiceImpl implements BrandService {
-@Autowired
-private BrandMapper brandMapper;
+    @Autowired
+    private BrandMapper brandMapper;
 
     @Override
     public ServerResponse findReconmendBrand() {
         String brandJson = RedisUtil.get(SystemConstant.BRAND_KEY);
-        if (StringUtils.isNotEmpty(brandJson)){
+        if (StringUtils.isNotEmpty(brandJson)) {
             List<Brand> brands = JSONObject.parseArray(brandJson, Brand.class);
-            RedisUtil.expire(SystemConstant.BRAND_KEY,SystemConstant.BRAND_EXPIRE);
+            RedisUtil.expire(SystemConstant.BRAND_KEY, SystemConstant.BRAND_EXPIRE);
             return ServerResponse.success(brands);
         }
-        QueryWrapper<Brand> brandQueryWrapper=new QueryWrapper<>();
+        QueryWrapper<Brand> brandQueryWrapper = new QueryWrapper<>();
         brandQueryWrapper.eq("isReconmend", SystemConstant.RECOMMEND_BRAND);
         brandQueryWrapper.orderByAsc("sort");
         List<Brand> brandList = brandMapper.selectList(brandQueryWrapper);
 
         brandJson = JSONObject.toJSONString(brandList);
-        RedisUtil.setEx(SystemConstant.BRAND_KEY,brandJson,SystemConstant.BRAND_EXPIRE);
+        RedisUtil.setEx(SystemConstant.BRAND_KEY, brandJson, SystemConstant.BRAND_EXPIRE);
         return ServerResponse.success(brandList);
     }
 
