@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fh.shop.api.car.mapper.CarMapper">
+    <sql id="car">
+        <where>
+            <if test="carName != null and carName != ''">
+                carname like concat('%',#{carName},'%')
+            </if>
+            <if test="minPrice != null">
+                and price >= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                and price &lt;= #{maxPrice}
+            </if>
+            <if test="minStock != null">
+                and stock >= #{minStock}
+            </if>
+            <if test="maxStock != null">
+                and stock &lt;= #{maxStock}
+            </if>
+            <if test="brandId != null">
+                and brandId = #{brandId}
+            </if>
+            <if test="provinceId != null">
+                and provinceId = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                and cityId = #{cityId}
+            </if>
+            <if test="areaId != null">
+                and areaId = #{areaId}
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="count" parameterType="com.fh.shop.api.car.param.CarSearchParam" resultType="int">
+        select count(*)from t_car
+        <include refid="car"></include>
+    </select>
+    <select id="findSerchCar" parameterType="com.fh.shop.api.car.param.CarSearchParam"
+            resultType="com.fh.shop.api.car.po.Car">
+        select t.* from (select c.id,c.carName,c.price,c.stock,c.isHot,c.status,b.brandName,c.areaName,c.img from t_car
+        c
+        left join t_brand b on c.brandId=b.id
+        <include refid="car"></include>
+        order by id desc)t
+        limit #{start},#{length}
+    </select>
+
+    <insert id="addBatchCar">
+        insert into t_car(carName,price,stock)values
+        <foreach collection="list" item="car" separator=",">
+            (#{car.carName},#{car.price},#{car.stock})
+        </foreach>
+    </insert>
+
+    <select id="findCarCount" resultType="java.util.Map">
+        select brandName 'name',count(*) 'value'from t_car c
+        left join t_brand b on c.brandId=b.id
+        group by brandName
+    </select>
+    <select id="groupBySaleTime" parameterType="String" resultType="java.util.Map">
+        select DATE_FORMAT(saleTime,'%Y-%m-%d') 'day',count(*) 'count'FROM t_car
+        where DATE_FORMAT(saleTime,'%Y-%m')=#{yearMonth}
+        GROUP BY DATE_FORMAT(saleTime,'%Y-%m-%d')
+        ORDER BY saleTime
+    </select>
+    <select id="statisticSaleCount" parameterType="java.util.Map" resultType="java.util.Map">
+        select DATE_FORMAT(saleTime,'%Y-%m-%d') 'day',count(*) 'count'FROM t_car
+        where brandId=#{brandId}
+        and STR_TO_DATE(DATE_FORMAT(saleTime,'%Y-%m-%d'),'%Y-%m-%d')>=STR_TO_DATE(#{startDate},'%Y-%m-%d')
+        and STR_TO_DATE(DATE_FORMAT(saleTime,'%Y-%m-%d'),'%Y-%m-%d')&lt;=STR_TO_DATE(#{endDate},'%Y-%m-%d')
+        GROUP BY DATE_FORMAT(saleTime,'%Y-%m-%d')
+    </select>
+</mapper>

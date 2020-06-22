@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fh.shop.api.car.mapper.HouseMapper">
+
+    <sql id="house">
+        <where>
+            <if test="name != null and name != ''">
+                carname like concat('%',#{name},'%')
+            </if>
+            <if test="minPrice != null">
+                and price >= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                and price &lt;= #{maxPrice}
+            </if>
+
+        </where>
+    </sql>
+    <select id="houseCount" resultType="long">
+        select count(*) from t_house
+        <include refid="house"></include>
+    </select>
+    <select id="findHouseList" parameterType="com.fh.shop.api.car.param.HouseParam"
+            resultType="com.fh.shop.api.car.po.House">
+        select t.* from (select id,name,price,area,unit,img,aspect,building,roomNumber from t_house)t
+        <include refid="house"></include>
+        limit #{start},#{length}
+
+    </select>
+
+
+</mapper>
