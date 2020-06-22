@@ -10,8 +10,8 @@ public class TreeTable {
 
     private Long pid;
     private String treeTable;
-@TableField(exist = false)
-private String oldTreeTable;
+    @TableField(exist = false)
+    private String oldTreeTable;
 
     public String getOldTreeTable() {
         return oldTreeTable;

@@ -12,7 +12,8 @@
 <a href="/goods/toList.jhtml">SPU展示页面</a><br/>
 <a href="/brand/toAdd.jhtml">品牌添加</a><br/>
 <a href="/brand/toList.jhtml">品牌展示页面</a>
-<a href="/category/toCate.jhtml">category展示页面</a>
+<a href="/category/toCate.jhtml">category展示页面</a><br/>
+<a href="/member/toListMember.jhtml">member展示页面</a>
 </body>
 </body>
 </html>

@@ -75,7 +75,7 @@
 </div>
 <textarea id="attrDiv" style="display: none">
 
-<tr>
+                        <tr>
                             <td><input type="checkbox" name="attrIds" value="##attrIds##"></td>
                             <td><input class="form-control" name="attrName" value="##attrName##"/></td>
                             <td>##attrValue##<input type="hidden" name="attrValue" value="##attrValue##"/></td>

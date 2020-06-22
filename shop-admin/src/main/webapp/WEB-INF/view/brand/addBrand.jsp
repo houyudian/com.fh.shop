@@ -48,6 +48,7 @@
     </div>
 </div>
 <script>
+
     function add() {
         var param = {};
         param.brandName = $("#brandName").val();

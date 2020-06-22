@@ -11,6 +11,7 @@ public class DateTime {
     public static final String  Y_M_D="yyyy-MM-dd";
     public static final String  FULL_TIME="yyyy-MM-dd HH:mm:ss";
 
+
     public static String date2str(Date date,String dateType){
         if (date==null){
             return "";

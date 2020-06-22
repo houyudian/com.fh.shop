@@ -68,7 +68,10 @@ public class GoodsServiceImpl implements GoodsService {
             String specValue = specValueArr[i];
             Long colorId = Long.valueOf(specValue.split(",")[0].split(":")[0]);
             goods.setColorId(colorId);
-            String img = Arrays.stream(goodsImage.split(";")).filter(x -> Long.valueOf(x.split(":")[0]) == colorId).map(y -> y.split(":")[1].split(",")[0]).collect(Collectors.toList()).get(0);
+            String img = Arrays.stream(goodsImage.split(";"))
+                    .filter(x -> Long.valueOf(x.split("\\|")[0]) == colorId)
+                    .map(y -> y.split("\\|")[1].split(",")[0])
+                    .findFirst().get();
 
             goods.setMainImage(img);
             String[] speacValueAndNameArr = specValue.split(",");
@@ -86,9 +89,9 @@ public class GoodsServiceImpl implements GoodsService {
         }
         String[] goodsImg = goodsImage.split(";");
         for (String img : goodsImg) {
-            Long colorId = Long.valueOf(img.split(":")[0]);
+            Long colorId = Long.valueOf(img.split("\\|")[0]);
 
-            String[] imgArr = img.split(":")[1].split(",");
+            String[] imgArr = img.split("\\|")[1].split(",");
 
             for (String i : imgArr) {
                 GoodsImage image = new GoodsImage();

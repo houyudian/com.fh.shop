@@ -16,9 +16,13 @@
     <div class="row">
         <div class="col-md-12">
             <form class="form-group col-sm-12">
-                <label class="col-sm-2 control-label">商品名</label>
-                <div class="col-sm-10">
-                    <input class="form-control" id="proName" placeholder="请输入商品名">
+
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label">名称</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="proName" placeholder="请输入商品名">
+
+                    </div>
                 </div>
 
                 <div class="form-group col-sm-12">
@@ -46,10 +50,7 @@
                     <div class="col-sm-10"></div>
                 </div>
 
-                <div class="form-group" id="relateInfoDiv">
-
-                </div>
-
+                <div class="form-group" id="relateInfoDiv"></div>
 
                 <div style="margin-left: 500px;">
                     <button type="button" class="btn btn-success" onclick="addGoods()"><i
@@ -111,7 +112,6 @@ console.log(result)
             stockArr.push(this.value);
         })
         param.stocks = stockArr.length > 0 ? stockArr.join(",") : "";
-
         var specValueArr = [];
         $("input[name=specValueInfo]").each(function () {
             specValueArr.push(this.value);
@@ -152,7 +152,7 @@ console.log(result)
         $("input[name=imgPath]").each(function () {
             var colorId = $(this).data("color-id");
             var imgPath = this.value.substring(1);
-            goodsImg.push(colorId + ":" + imgPath);
+            goodsImg.push(colorId + "|" + imgPath);
 
         })
         param.goodsImage = goodsImg.length > 0 ? goodsImg.join(";") : "";
@@ -231,7 +231,6 @@ console.log(result)
                     initSpeacList(speacVoList);
                 }
             }
-
         })
 
     }
