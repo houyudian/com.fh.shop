@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="shop/bootstrap/css/bootstrap.min.css">
+    <script src="/shop/jquery-3.3.1.js"></script>
+    <script src="/shop/jquery.cookie.js"></script>
+    <script src="/shop/jsencrypt.js"></script>
+    <script src="/shop/key.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -24,27 +29,36 @@
             <div class="form-group">
                 <div class="col-md-2"></div>
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-primary" onclick="enter();"><i class="glyphicon glyphicon-ok"></i> 登入</button>
+                    <button type="button" class="btn btn-primary" onclick="enter();"><i
+                            class="glyphicon glyphicon-ok"></i> 登入
+                    </button>
                     <button type="reset" class="btn btn-default"><i class="glyphicon glyphicon-refresh"></i>重置</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+
 <script>
     function enter() {
-        var name=$("#name").val();
-        var pwd=$("#pwd").val();
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(publicKey);
+        var name = encrypt.encrypt($("#name").val());
+        console.log(name)
+        var pwd = encrypt.encrypt($("#pwd").val());
+        console.log(pwd)
         $.ajax({
-            url:"http://localhost:8082/login/enter",
-            data:{name:name,pwd:pwd},
-            type:"post",
-            dataType:"json",
-            success:function (result) {
-                if (result.code==200){
-                    location.href="index.html";
-                }else{
-                    alert(result.msg);
+            url: "http://localhost:8082/api/login",
+            data: {name: name, pwd: pwd},
+            type: "post",
+            success: function (result) {
+                if (result.code == 200) {
+                    console.log(result.data)
+                    $.cookie("token", result.data);
+                    location.href = "/";
+                } else {
+                    console.log(result.msg);
                 }
             }
         })

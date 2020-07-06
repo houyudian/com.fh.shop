@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册会员</title>
+    <link rel="stylesheet" type="text/css" href="/shop/bootstrap/css/bootstrap.min.css"/>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 style="color: blue">会员注册:</h1>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="color: red" >会员名:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" onblur="volidateName()">
+                        <span id="nameTip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="color: red">真实名:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="realName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="color: red">密码:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="pwd">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="color: red">邮箱:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="mail" onblur="volidateMail()">
+                        <span id="mailTip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="color: red">手机号:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="phone" onblur="volidatePhone()">
+                        <span id="phoneTip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="color: red">生日:</label>
+                    <div class="col-sm-6">
+                        <input type="date" class="form-control" id="birthday">
+                    </div>
+                </div>
+                <div class="form-group col-sm-12" id="areaDiv">
+                    <label class="col-sm-2 control-label" style="color: red">地区:</label>
+                    <div class="col-sm-10"></div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-primary" id="reg" onclick="add();">
+                        <i class="glyphicon glyphicon-pushpin"></i>注册
+                    </button>
+                    <button type="reset" class="btn btn-default"><i class="glyphicon glyphicon-refresh"></i>重置
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/shop/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="/shop/bootbox/bootbox.min.js"></script>
+
+<script type="text/javascript" src="/shop/js/pages/index.js"></script>
+<script type="text/javascript" src="/shop/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        $("#name").focus();
+        init(0);
+    })
+    function init(id, obj) {
+        if (obj) {
+            $(obj).parent().nextAll().remove();
+        }
+        $.ajax({
+            url: "http://localhost:8082/api/area?id=" + id,
+            type: 'get',
+            data: {id: id},
+            dataType: "json",
+            success: function (result) {
+                var data = result.data;
+                if (data.length == 0) {
+                    var typeId = $(obj).find("option:selected").data("type-id");
+                    return;
+                }
+                if (data.length > 0) {
+                    var html = '<div class="col-sm-3"><select onchange="init(this.value,this)" name="cateSelect" class="form-control"><option value="-1">请选择</option>';
+                    for (let area of data) {
+                        html += '<option data-areaname="' + area.areaName + '" value="' + area.id + '">' + area.areaName + '</option>';
+                    }
+                    html += '<select></div>';
+
+                    $("#areaDiv").append(html);
+                }
+            }
+        })
+    }
+
+
+
+    function volidateName() {
+        var name = $("#name").val();
+        if (!name) {
+            $("#nameTip").html("<fond color='red'><b>会员名为空</b></fond>");
+            return false;
+        }
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8082/api/member/validate",
+            data: {name: name},
+            success: function (result) {
+                if (result.code != 200) {
+                    $("#nameTip").html("<fond color='red'>会员名已注册</fond>");
+                    $("#reg").attr("disable",true);
+                } else {
+                    $("#nameTip").html("");
+                    $("#reg").attr("disable",false);
+                }
+            }
+        })
+    }
+    function volidateMail() {
+        var mail = $("#mail").val();
+        if (!mail) {
+            $("#mailTip").html("<fond color='red'>邮箱为空</fond>");
+            return false;
+        }
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8082/api/member/validateMail",
+            data: {mail: mail},
+            success: function (result) {
+                if (result.code != 200) {
+                    $("#mailTip").html("<fond color='red'>邮箱已注册</fond>");
+                    $("#reg").attr("disable",true);
+                } else {
+                    $("#mailTip").html("");
+                    $("#reg").attr("disable",false);
+                }
+            }
+        })
+
+    }
+    function volidatePhone() {
+        var phone = $("#phone").val();
+        if (!phone) {
+            $("#phoneTip").html("<fond color='red'>手机号为空</fond>");
+            return false;
+        }
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8082/api/member/validatePhone",
+            data: {phone: phone},
+            success: function (result) {
+                if (result.code != 200) {
+                    $("#phoneTip").html("<fond color='red'>会员名已注册</fond>");
+                    $("#reg").attr("disable",true);
+                } else {
+                    $("#phoneTip").html("");
+                    $("#reg").attr("disable",false);
+                }
+            }
+        })
+
+    }
+
+    function add() {
+        var param = {}
+        param.name = $("#name").val();
+        param.mail = $("#mail").val();
+        param.phone = $("#phone").val();
+        param.realName = $("#realName").val();
+        param.pwd = $("#pwd").val();
+        param.proId = $($("select[name=cateSelect]")[0]).val();
+        param.areaId = $($("select[name=cateSelect]")[1]).val();
+        param.cityId = $($("select[name=cateSelect]")[2]).val();
+        param.areaName = "|" + $($("select[name=cateSelect]")[0]).find("option:selected").data("areaname") + "|->|" +
+            $($("select[name=cateSelect]")[1]).find("option:selected").data("areaname") + "|->|" +
+            $($("select[name=cateSelect]")[2]).find("option:selected").data("areaname") + "|";
+console.log(param)
+        if (!param.name || !param.mail || !param.phone) {
+            bootbox.alert({
+                message: "<span class='glyphicon glyphicon-exclamation-sign'></span>注册信息不完整",
+                size: 'small',
+                title: '注册失败'
+            })
+            return false;
+        }
+
+        $.ajax({
+            type: "post",
+            url: "http://localhost:8082/api/member/add",
+            data: param,
+            success: function (result) {
+                if (result.code == 200) {
+                    location.href = "/";
+                } else {
+                    bootbox.alert({
+                        message: "<span class='glyphicon glyphicon-exclamation-sign'></span>" + result.message,
+                        size: 'small',
+                        title: '注册失败'
+                    })
+                }
+            }
+
+        })
+    }
+
+</script>
+
+
+</body>
+</html>

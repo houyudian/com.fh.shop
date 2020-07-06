@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+    <title>微信支付页</title>
+    <!--<link rel="icon" href="/shop/img/assets/img/favicon.ico">-->
+
+    <link rel="stylesheet" href="/shop/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/shop/css/webbase.css"/>
+    <link rel="stylesheet" type="text/css" href="/carts/css/pages-weixinpay.css"/>
+
+</head>
+
+<body>
+<!--head-->
+<div class="cart py-container">
+    <!--主内容-->
+    <div class="checkout py-container  pay">
+        <div class="checkout-tit">
+            <h4 class="fl tit-txt"><span class="success-icon"></span><span class="success-info">订单提交成功：</span></h4>
+            <span class="fr"><em class="sui-lead">应付金额：</em><em class="orange money">￥0.00</em>元</span>
+            <div class="clearfix"></div>
+        </div>
+        <div class="checkout-steps">
+            <div class="fl weixin">微信支付</div>
+            <div class="fl sao">
+                <p class="red">获取二维码....。</p>
+                <div class="fl code">
+                    <div id="ewmImg"></div>
+                    <div class="saosao">
+                        <p>请使用微信扫一扫</p>
+                        <p>扫描二维码支付</p>
+                    </div>
+                </div>
+                <div class="fl phone">
+
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <p><a href="/">> 其他支付方式</a></p>
+            <p><a href="/">> 添加购物车</a></p>
+        </div>
+    </div>
+
+</div>
+<div class="clearfix footer">
+    <div class="py-container">
+
+
+    </div>
+</div>
+</div>
+<!--页面底部END-->
+<script src="/shop/jquery-3.3.1.min.js"></script>
+<script src="/shop/bootstrap/css/bootstrap.min.css"></script>
+<script src="/shop/jquery.cookie.min.js"></script>
+<script src="/shop/bootbox/bootbox.min.js"></script>
+<script src="/shop/bootbox/bootbox.locales.min.js"></script>
+<script src="/shop/nav.js"></script>
+<script src="/shop/js/qrcode.min.js"></script>
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+        initPayEwm();
+    })
+
+    function initPayEwm() {
+        var token = $.cookie("token");
+        if (token) {
+            $.ajax({
+                type: "post",
+                url: "http://localhost:8082/api/pay/createNative",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('x-auth', token);
+                },
+                success: function (result) {
+                    console.log(result)
+                    var code = result.code;
+                    if (code == 200) {
+                        var outTradeNo = result.data.outTradeNo;
+                        var payMoney = result.data.payMoney;
+                        var codeUrl = result.data.codeUrl;
+                        $(".success-info").html("订单提交成功，请您及时付款！支付单号：" + outTradeNo);
+                        $(".money").html("￥" + payMoney);
+                       new QRCode(document.getElementById("ewmImg"), codeUrl);
+                        checkPayStatus();
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+
+            })
+        }
+    }
+
+    function checkPayStatus() {
+        var token = $.cookie("token");
+        if (token) {
+            $.ajax({
+                url: "http://localhost:8082/api/pay",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('x-auth', token);
+                },
+                success: function (result) {
+                    console.log(result)
+                    if (result.code == 200) {
+                        location.href = "paysuccess.html";
+
+                    } else if (result.code=7777) {
+                        $("#ewmImg").html("支付超时，刷新页面,生成新的二维码");
+
+                    }else {
+                        $(".red").html(result.msg);
+
+                    }
+                }
+            })
+        }
+    }
+
+</script>
+</body>
+
+</html>

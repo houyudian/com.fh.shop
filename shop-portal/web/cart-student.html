@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+    <title>我的购物车</title>
+
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" type="text/css" href="/shop/css/webbase.css"/>
+    <link rel="stylesheet" type="text/css" href="/shop/css/pages-cart.css"/>
+</head>
+
+<body>
+<div id="navDiv"></div>
+<!--head-->
+<div class="cart py-container">
+    <!--All goods-->
+    <div class="allgoods" id="allGoodsDiv">
+        <h4>全部商品</h4>
+        <div class="cart-main">
+            <div class="yui3-g cart-th">
+                <div class="yui3-u-1-4"><input type="checkbox" name="" onclick="checkboxStatus()" id="1" value=""/> 全部
+                </div>
+                <div class="yui3-u-1-4">商品</div>
+                <div class="yui3-u-1-8">单价（元）</div>
+                <div class="yui3-u-1-8">数量</div>
+                <div class="yui3-u-1-8">小计（元）</div>
+                <div class="yui3-u-1-8">操作</div>
+            </div>
+            <div class="cart-item-list">
+
+
+                <div class="cart-body" id="cartBody">
+
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="cart-tool">
+            <div class="select-all">
+                <input type="checkbox" name="" id="" value=""/>
+                <span onclick="checkboxStatus()">全选</span>
+            </div>
+            <div class="option">
+                <a href="javascript:;" onclick="deleteCart()">删除选中的商品</a>
+                <a href="#none">移到我的关注</a>
+                <a href="#none">清除下柜商品</a>
+            </div>
+            <div class="toolbar">
+                <div class="chosed">共<span id="num">0</span>件商品</div>
+                <div class="chosed">已选择<span id="totalNum">0</span>件商品</div>
+                <div class="sumprice">
+                    <span><em>总价（不含运费） ：</em><i class="summoney" id="totalMoney">¥00.00</i></span>
+                    <span><em>已节省：</em><i>-¥20.00</i></span>
+                </div>
+                <div class="sumbtn">
+                    <a class="sum-btn" href="carts/getOrderInfo.html">结算</a>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+    </div>
+</div>
+<div id="cartTemplate" style="display:none ">
+    <div class="col-sm-12 col-md-3">
+        <div class="thumbnail">
+            <div class="cart-list">
+                <ul class="goods-list yui3-g">
+                    <li class="yui3-u-1-24">
+                        <input type="checkbox" name="selectCart" id="123" value="##checkbox##"/>
+                    </li>
+                    <li class="yui3-u-11-24">
+                        <div class="good-item">
+                            <div class="item-img"><img src="##img##" style="width: 50px;height: 50px"/></div>
+                            <div class="item-msg">##name##</div>
+                        </div>
+                    </li>
+
+                    <li class="yui3-u-1-8"><span class="price">##price##</span></li>
+                    <li class="yui3-u-1-8">
+                        <a href="javascript:void(0)" class="increment mins" onclick="addNum('##goodsId##','-1')">-</a>
+                        <input autocomplete="off" type="text" value="##num##" minnum="1" class="itxt"/>
+                        <a href="javascript:void(0)" class="increment plus" onclick="addNum('##goodsId##','1')">+</a>
+                    </li>
+                    <li class="yui3-u-1-8"><span class="sum">##subPrice##</span></li>
+                    <li class="yui3-u-1-8">
+                        <a href="#none" onclick="addNum('##goodsId##','-##num##')">删除</a><br/>
+                        <a href="#none">移到我的关注</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/shop/jquery-3.3.1.js"></script>
+<script src="/shop/jquery.cookie.min.js"></script>
+<script>
+    $(function () {
+        initCart();
+    })
+
+    function initCart() {
+        var token = $.cookie("token");
+        console.log(token)
+        if (token) {
+            $.ajax({
+                url: "http://localhost:8082/api/find",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("x-auth", token);
+                },
+                success: function (result) {
+                    if (result.code == 200) {
+                        var cartArr = result.data;
+                        if (cartArr == null) {
+                            $("#allGoodsDiv").html("<h1 style='text-align: center'>购物车为空，请<a href='/index.html'>购买</a></h1>");
+                            return;
+                        }
+                        var carItems = cartArr.carItems;
+                        var html = $("#cartTemplate").html();
+                        $("#cartBody").html("");
+                        for (let cart of carItems) {
+                            var result = html.replace(/##name##/g, cart.name)
+                                .replace(/##img##/g, cart.img)
+                                .replace(/##price##/g, cart.price)
+                                .replace(/##goodsId##/g, cart.goodsId)
+                                .replace(/##subPrice##/g, cart.subPrice)
+                                .replace(/##num##/g, cart.num)
+                                .replace(/##checkbox##/g, cart.goodsId)
+                            $("#cartBody").append(result);
+                        }
+                        $("#num").html(cartArr.totalNum);
+                        $("#totalMoney").html(cartArr.totalPrice);
+                    }
+                }
+            })
+        } else {
+            $("#allGoodsDiv").html("<h1 style='text-align: center'>请求头信息为空，请<a href='login.html'>登录</a></h1>");
+        }
+    }
+
+
+    function addNum(id, num) {
+        console.log("热销商品id:" + id, num)
+        var token = $.cookie("token");
+        if (token) {
+            $.ajax({
+                url: "http://localhost:8082/api/addItem",
+                dataType: "json",
+                type: "post",
+                data: {"goodsId": id, "num": num},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("x-auth", token);
+                },
+                success: function (result) {
+                    if (result.code == 200) {
+                        initCart();
+                    } else {
+                        console.log(result.msg)
+                    }
+                }
+            })
+        } else {
+            $("#allGoodsDiv").html("<h1 style='text-align: center'>购物车为空，请<a href='login.html'>登录</a></h1>");
+        }
+    }
+
+    function deleCartItem(id, num) {
+        var token = $.cookie("token");
+        $.ajax({
+            url: "http://localhost:8082/api/addItem",
+            type: "post", dataType: "json",
+            data: {"goodsId": id, "num": num},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("x-auth", token);
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    console.log("商品删除成功")
+                    location.href = "cart-student.html";
+                } else {
+                    console.log(result.msg)
+                }
+            }
+        })
+    }
+
+    //全选
+    function checkboxStatus() {
+        $("[name='selectCart']").each(function () {
+            this.checked = !this.checked;
+        })
+    }
+
+    //删除购物车
+    function deleteCart() {
+        var token = $.cookie("token");
+        var goodsIdArr = [];
+        $("[name='selectCart']:checked").each(function () {
+            if (this.value.indexOf("#") == -1) {
+                goodsIdArr.push(this.value);
+            }
+        })
+        alert(goodsIdArr);
+        $.ajax({
+            type: "post",
+            url: "http://localhost:8082/api/deleteCart",
+            data: {
+                "goodsids": goodsIdArr + ""
+            },
+            dataType: "json",
+            beforeSend: function (xhr) {
+                // 在发送请求之前执行 beforeSend中的代码，所以可以在这里面设置头信息
+                xhr.setRequestHeader("x-auth", token);
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    location.reload();
+                    alert("删除成功");
+                }
+            }
+        })
+    }
+
+</script>
+
+</body>
+
+</html>
+<!--
+<div class="cart-list">
+    <ul class="goods-list yui3-g">
+        <li class="yui3-u-1-24">
+            <input type="checkbox" name="" id="12" value="" />
+        </li>
+        <li class="yui3-u-11-24">
+            <div class="good-item">
+                <div class="item-img"><img src="img/goods.png" /></div>
+                <div class="item-msg">Apple Macbook Air 13.3英寸笔记本电脑 银色（Corei5）处理器/8GB内存
+                    尺寸：13.3英寸</div>
+            </div>
+        </li>
+
+        <li class="yui3-u-1-8"><span class="price">8848.00</span></li>
+        <li class="yui3-u-1-8">
+            <a href="javascript:void(0)" class="increment mins">-</a>
+            <input autocomplete="off" type="text" value="1" minnum="1" class="itxt" />
+            <a href="javascript:void(0)" class="increment plus">+</a>
+        </li>
+        <li class="yui3-u-1-8"><span class="sum">8848.00</span></li>
+        <li class="yui3-u-1-8">
+            <a href="#none">删除</a><br />
+            <a href="#none">移到我的关注</a>
+        </li>
+    </ul>
+</div>-->

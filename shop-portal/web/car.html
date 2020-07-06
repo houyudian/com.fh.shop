@@ -128,7 +128,7 @@ $(function () {
            var ids=idArr.join(",");
            $.ajax({
                type:"delete",
-               url:"http://localhost:8082/cars?ids="+ids,
+               url:"http://localhost:8082/api/cars?ids="+ids,
                success:function (result) {
                    if (result.code==200){
                        search();
@@ -139,7 +139,7 @@ $(function () {
     }
     function initCar() {
         $.ajax({
-            url:"http://localhost:8082/cars",
+            url:"http://localhost:8082/api/cars",
             success:function (result) {
                 if (result.code==200){
                     var html='';
@@ -163,7 +163,7 @@ $(function () {
 function deleteCar(id) {
     $.ajax({
         type:"delete",
-        url:"http://localhost:8082/cars/"+id,
+        url:"http://localhost:8082/api/cars/"+id,
         dataType:"json",
         success:function (result) {
             if (result.code == 200) {
@@ -185,7 +185,7 @@ function deleteCar(id) {
                 if (result) {
                     console.log($("#carForm").serialize())
                     $.ajax({
-                        url: "http://localhost:8082/cars",
+                        url: "http://localhost:8082/api/cars",
                         type: "post",
                         dataType: "json",
                         data: $("#carForm").serialize(),
@@ -204,7 +204,7 @@ function deleteCar(id) {
 
     function updates(id){
         $.ajax({
-            url: "http://localhost:8082/cars/" + id,
+            url: "http://localhost:8082/api/cars/" + id,
             type: "get",
             dataType: "json",
             success: function (result) {
@@ -230,7 +230,7 @@ function deleteCar(id) {
                     callback: function () {
 
                         $.ajax({
-                            url: "http://localhost:8082/cars",
+                            url: "http://localhost:8082/api/cars",
                             type: "put",
                             dataType:"json",
                            //dataType:"application/json;charset=utf-8",
@@ -249,8 +249,46 @@ function deleteCar(id) {
             }
 
         })
+    }
+//全选
+function checkboxStatus() {
+    $("[name='selectCart']").each(function () {
+        this.checked=!this.checked;
+    })
+}
+//删除购物车
+function deleteCart() {
+    var fhToken = $.cookie("fh-token");
+    var goodsIdArr=[];
+    $("[name='selectCart']:checked").each(function () {
+        goodsIdArr.push(this.value);
+    })
+    var goodsids=goodsIdArr.slice(0,goodsIdArr.length-1);
+    alert(goodsids+"");
+    $.ajax({
+        type:"post",
+        url:"http://localhost:8082/api/cart/deleteCart",
+        data:{
+            "goodsids":goodsids+""
+        },
+        dataType:"json",
+        beforeSend:function(xhr) {
+            // 在发送请求之前执行 beforeSend中的代码，所以可以在这里面设置头信息
+            xhr.setRequestHeader("x-auth", fhToken);
+        },
+        success:function (result) {
+            if(result.code==200){
+                alert("删除成功");
+            }
+        }
+    })
+}
+
+function deleteBatchCar() {
+
 
     }
+
 </script>
 </body>
 </html>
