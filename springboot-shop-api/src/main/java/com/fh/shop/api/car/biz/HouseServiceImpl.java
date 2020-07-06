@@ -1,10 +1,9 @@
 package com.fh.shop.api.car.biz;
 
-import com.fh.shop.api.common.DataTableResult;
-import com.fh.shop.api.common.ServerResponse;
 import com.fh.shop.api.car.mapper.HouseMapper;
 import com.fh.shop.api.car.param.HouseParam;
 import com.fh.shop.api.car.po.House;
+import com.fh.shop.api.common.ServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +16,6 @@ public class HouseServiceImpl implements HouseService {
     @Autowired
     private HouseMapper houseMapper;
 
-    @Override
-    public DataTableResult findHouse(HouseParam houseParam) {
-        Long count = houseMapper.houseCount(houseParam);
-
-        List<House> houses = houseMapper.findHouseList(houseParam);
-        // return new DataTableResult(houseParam.getDraw(),count,count,houses);
-        return null;
-    }
 
     @Override
     public ServerResponse addHouse(House house) {

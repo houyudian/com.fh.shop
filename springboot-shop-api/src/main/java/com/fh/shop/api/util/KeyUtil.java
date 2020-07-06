@@ -15,4 +15,16 @@ public class KeyUtil {
     public static String buildCarKey(Long memberId) {
         return "cart:" + memberId;
     }
+    public static String buildOrderStockLessKey(Long memberId) {
+        return "order:stock:less:" + memberId;
+    }
+    public static String buildOrderKey(Long memberId) {
+        return "order:" + memberId;
+    }
+    public static String buildOrderErrorKey(Long memberId) {
+        return "order:error" + memberId;
+    }
+    public static String buildPayLogKey(Long memberId) {
+        return "paylog:" + memberId;
+    }
 }

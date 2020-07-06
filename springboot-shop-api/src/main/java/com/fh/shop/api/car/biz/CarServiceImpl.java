@@ -302,6 +302,7 @@ public class CarServiceImpl implements CarService {
         item.setPrice(goods.getPrice().toString());
         item.setName(goods.getProductName());
         item.setImg(goods.getMainImage());
+        item.setStock(goods.getStock());
         item.setSubPrice(BigDecimalUtil.mul(num + "", goods.getPrice().toString()).toString());
         return item;
     }
@@ -353,5 +354,19 @@ public class CarServiceImpl implements CarService {
         //将购物车字符串作为value存入redis中
         RedisUtil.set(cartKey, cartString);
         return ServerResponse.success();
+    }
+
+    @Override
+    public Map<String,Object> getCarKey(Long id) {
+        String key = KeyUtil.buildCarKey(id);
+        String cartJson = RedisUtil.get(key);
+        Car car = JSONObject.parseObject(cartJson, Car.class);
+        List<CarItem> carItems = car.getCarItems();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("cartList",carItems);
+        map.put("totalprice", car.getTotalPrice());
+        map.put("totalNum", car.getTotalNum());
+        return map;
+
     }
 }

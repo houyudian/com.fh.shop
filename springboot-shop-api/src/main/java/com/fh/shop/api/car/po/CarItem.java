@@ -9,6 +9,15 @@ public class CarItem implements Serializable {
     private int num;
     private String subPrice;
     private String img;
+private Long Stock;
+
+    public Long getStock() {
+        return Stock;
+    }
+
+    public void setStock(Long stock) {
+        Stock = stock;
+    }
 
     public Long getGoodsId() {
         return goodsId;

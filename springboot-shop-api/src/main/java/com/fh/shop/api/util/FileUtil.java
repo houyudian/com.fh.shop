@@ -3,9 +3,6 @@ package com.fh.shop.api.util;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dom4j.Document;
@@ -17,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
-import java.util.Map;
 import java.util.UUID;
+
+/*import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;*/
 
 public class FileUtil {
 
@@ -35,7 +35,7 @@ public class FileUtil {
         }
     }
 
-    public static String buildPdfHtml(Map data, String pdfTemplateFile, String templatePath) {
+   /* public static String buildPdfHtml(Map data, String pdfTemplateFile, String templatePath) {
         // 将其转换为html
         StringWriter sw = null;
         try {
@@ -54,9 +54,9 @@ public class FileUtil {
             throw new RuntimeException(e);
         }
         return sw.toString();
-    }
+    }*/
 
-    public static File buildWord(Map data, String templateFile, String templatePath, String savePath) {
+    /*public static File buildWord(Map data, String templateFile, String templatePath, String savePath) {
         FileOutputStream out = null;
         OutputStreamWriter osw = null;
         File file = null;
@@ -101,7 +101,7 @@ public class FileUtil {
             }
         }
         return file;
-    }
+    }*/
 
     public static String copyFile(File file, String fileName, String folderPath) {
         // 上传物理文件到服务器硬盘

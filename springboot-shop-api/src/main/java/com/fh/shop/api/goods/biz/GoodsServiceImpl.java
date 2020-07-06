@@ -3,7 +3,6 @@ package com.fh.shop.api.goods.biz;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fh.shop.api.common.RedisUtil;
-import com.fh.shop.api.common.SendMail;
 import com.fh.shop.api.common.ServerResponse;
 import com.fh.shop.api.common.SystemConstant;
 import com.fh.shop.api.goods.mapper.GoodsMapper;
@@ -81,15 +80,14 @@ public class GoodsServiceImpl implements GoodsService {
         String password = "yhwpqpuyqtiybhdd";
         String host = "imap.qq.com";
         String from = "389168944@qq.com";
-        String to = "389168944@qq.com";// 收件人
-        String subject = "huahua";
+        String to = "2685975819@qq.com";// 收件人
+        String subject = "huahua123";
         //邮箱内容
         StringBuffer sb = new StringBuffer();
         String dataInfo = html;
         sb.append(html);
         try {
-            String res = SendMail.sendMail(user, password, host, from, to, subject, sb.toString());
-            System.out.println(res);
+          //  String res = SendMail.sendMail(user, password, host, from, to, subject, sb.toString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

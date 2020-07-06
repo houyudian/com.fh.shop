@@ -54,11 +54,11 @@ public class RedisUtil {
         }
     }
 
-    public static void delete(String key) {
+    public static Long delete(String key) {
         Jedis jedis = null;
         try {
             jedis = RedisPool.getResource();
-            jedis.del(key);
+           return jedis.del(key);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

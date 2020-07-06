@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fh.shop.api.order.mapper.OrderItemMapper">
+
+
+
+ <insert id="insertBatchs" >
+     insert into t_order_item(
+     id,
+     orderId,
+     productId,
+     memberId,
+     productName,
+     price,
+     subTotalPrice,
+     count,
+     img
+     ) values
+     <foreach collection="list" separator="," item="x">
+         (
+         #{x.id},
+         #{x.orderId},
+         #{x.productId},
+         #{x.memberId},
+         #{x.productName},
+         #{x.price},
+         #{x.subTotalPrice},
+         #{x.count},
+         #{x.img}
+         )
+     </foreach>
+ </insert>
+
+
+</mapper>

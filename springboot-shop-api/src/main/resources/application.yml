@@ -2,7 +2,7 @@
 server:
   port: 8082
 mybatis-plus:
-  mapper-locations: classpath:mappers/*.xml
+  mapper-locations: classpath:mapper/*.xml
   global-config:
     db-config:
       id-type: auto
@@ -10,8 +10,11 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
 spring:
+  data:
+    mongodb:
+      url: mongodb://192.168.24.144:27017/congge
   datasource:
-    url: jdbc:mysql://192.168.12.52:3306/1906b?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    url: jdbc:mysql://192.168.12.52:3306/1906b?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
     password: root
@@ -21,6 +24,23 @@ spring:
       max-active: 1000
       min-idle: 5
       max-wait: 60000
+  application:
+    name: Spring-boot-rabbitmq
+  rabbitmq:
+    port: 5672
+    host: 192.168.24.144
+    username: huahua
+    password: huahua
+    virtual-host: /
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 3000
+        default-requeue-rejected: true
+        prefetch: 5
+        acknowledge-mode: manual
 mail:
   from: 389168944@qq.com
   password: yhwpqpuyqtiybhdd
@@ -29,3 +49,4 @@ mail:
 
 stock:
   count: 10
+

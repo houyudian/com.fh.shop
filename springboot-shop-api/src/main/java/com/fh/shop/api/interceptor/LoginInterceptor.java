@@ -22,9 +22,9 @@ import java.util.Base64;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // String origin = request.getHeader("Origin");
+       // String origin = request.getHeader("Origin");
         response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-        response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "x-auth,content-type,nonce,time,sign");
+        response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "x-auth,content-type,nonce,time,sign,token");
         /*获取方法*/
         String method1 = request.getMethod();
         if ("options".equalsIgnoreCase(method1)) {

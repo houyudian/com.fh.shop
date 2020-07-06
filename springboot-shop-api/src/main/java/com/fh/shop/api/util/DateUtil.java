@@ -14,7 +14,25 @@ public class DateUtil {
     public static final String Y_M_D = "yyyy-MM-dd";
 
     public static final String FULL_TIME = "yyyy-MM-dd HH:mm:ss";
+    public static final String yyyyMMhhmmss="yyyyMMddHHmmss";
 
+
+    public static Date addMinutes(Date date,int minute){
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(date);
+        instance.add(Calendar.MINUTE,minute);
+        Date time = instance.getTime();
+        return time;
+    }
+
+    public static  String getYyyyMMhhmmss(Date date,String pattern){
+        if(date != null){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String result = simpleDateFormat.format(date);
+            return result;
+        }
+        return "";
+    }
     public static Long dayBetween(String s1, String s2, String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {

@@ -9,6 +9,9 @@ import com.fh.shop.api.common.SystemConstant;
 import com.fh.shop.api.member.mapper.MemberMapper;
 import com.fh.shop.api.member.po.Member;
 import com.fh.shop.api.member.vo.MemberVo;
+import com.fh.shop.api.rabbitmq.HelloSender;
+import com.fh.shop.api.rabbitmq.po.MsgLog;
+import com.fh.shop.api.util.DateUtil;
 import com.fh.shop.api.util.KeyUtil;
 import com.fh.shop.api.util.MD5Util;
 import com.fh.shop.api.util.RSAUtil;
@@ -18,12 +21,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
 public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private HelloSender helloSender;
 
     @Override
     public ServerResponse addMember(Member m) {
@@ -135,6 +141,19 @@ public class MemberServiceImpl implements MemberService {
             String baseSign = Base64.getEncoder().encodeToString(sign.getBytes());
             String result = s2 + "." + baseSign;
             RedisUtil.setEx(KeyUtil.buildMemberKey(id, uuid), "1", KeyUtil.MEMBER_EXPIRE);
+            String mail = member.getMail();
+            String dataTime = DateUtil.date(new Date(), DateUtil.FULL_TIME);
+//            String content = "您在 " + dataTime + " 登陆了系统！！！";
+//            /*mailUtil.sendMail(mail,"登陆提示",content);*/
+
+            String realName = member.getRealName();
+            MsgLog msgLog = new MsgLog();
+            String uid = UUID.randomUUID().toString().replace("-", "");
+            msgLog.setMsgId(uid);
+            msgLog.setMail(mail);
+            msgLog.setLoginDate(dataTime);
+            msgLog.setRealName(realName);
+          // helloSender.sendMailMessage(msgLog);
             return ServerResponse.success(result);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

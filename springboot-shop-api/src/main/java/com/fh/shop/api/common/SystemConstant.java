@@ -19,4 +19,19 @@ public class SystemConstant {
     public static final String APPSECRET = "hou";
     public static final String CURRENT_MEMBER = "currentMember";
 
+    public interface OrderStatus {
+        int WAIT_PAY = 0;
+        int PAY_SUCCESS = 1;
+        int SEND_GOODS = 2;
+        int TRADE_SUCESS = 3;
+        int TRADE_CLOSE = 4;
+        int COMMENT_OVER = 5;
+
+    }
+    public interface PayStatus {
+        int WAIT_PAY = 0;
+        int PAY_SUCCESS = 1;
+
+    }
+
 }

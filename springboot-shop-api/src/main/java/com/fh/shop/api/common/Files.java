@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 
-@RequestMapping("files")
+@RequestMapping("/api/files")
 @RestController
-@CrossOrigin("*")
 public class Files {
 
     @DeleteMapping("deleteFiles")

@@ -43,4 +43,6 @@ public interface CarService {
 
     ServerResponse deleteCart(String goodsids);
 
+    Map<String,Object> getCarKey(Long id);
+
 }

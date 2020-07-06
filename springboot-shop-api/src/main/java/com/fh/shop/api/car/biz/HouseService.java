@@ -1,12 +1,11 @@
 package com.fh.shop.api.car.biz;
 
-import com.fh.shop.api.common.DataTableResult;
-import com.fh.shop.api.common.ServerResponse;
 import com.fh.shop.api.car.param.HouseParam;
 import com.fh.shop.api.car.po.House;
+import com.fh.shop.api.common.ServerResponse;
 
 public interface HouseService {
-    DataTableResult findHouse(HouseParam houseParam);
+
 
     ServerResponse addHouse(House house);
 

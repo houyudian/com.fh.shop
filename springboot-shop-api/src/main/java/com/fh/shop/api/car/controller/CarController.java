@@ -7,6 +7,10 @@ import com.fh.shop.api.common.ServerResponse;
 import com.fh.shop.api.common.SystemConstant;
 import com.fh.shop.api.member.vo.MemberVo;
 import com.fh.shop.api.util.Check;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +20,8 @@ import java.util.Map;
 import java.util.Random;
 
 @RestController
-
+@RequestMapping("/api")
+@Api(tags = "购物车接口")
 public class CarController {
 
     public static void main(String[] args) {
@@ -39,6 +44,7 @@ public class CarController {
     private CarService carService;
 
     @PostMapping("addCar")
+    @ApiOperation("增加购物车")
     public ServerResponse addCarItem(HttpServletRequest request, Long goodsId, int num) {
         MemberVo memberVo = (MemberVo) request.getAttribute(SystemConstant.CURRENT_MEMBER);
         Long id = memberVo.getId();
@@ -48,6 +54,10 @@ public class CarController {
 
     @PostMapping("addItem")
     @Check
+    @ApiOperation("增加购物车啊")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="x-auth",value="登录后的头信息",required = true,dataType = "String",paramType = "header"),
+    })
     public ServerResponse addItem(HttpServletRequest request, Long goodsId, int num) {
         MemberVo memberVo = (MemberVo) request.getAttribute(SystemConstant.CURRENT_MEMBER);
         Long memberId = memberVo.getId();
@@ -56,6 +66,9 @@ public class CarController {
 
     @GetMapping("find")
     @Check
+    @ApiOperation("购物车查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="x-auth",value="登录后的头信息",required = true,dataType = "String",paramType = "header")})
     public ServerResponse find(HttpServletRequest request) {
         MemberVo memberVo = (MemberVo) request.getAttribute(SystemConstant.CURRENT_MEMBER);
         Long memberId = memberVo.getId();
@@ -63,6 +76,7 @@ public class CarController {
     }
 
     @PutMapping("/cars/status")
+    @ApiOperation("改变状态")
     public ServerResponse updateStatus(@RequestBody Car car) {
         return carService.updateStatus(car);
     }
@@ -73,21 +87,25 @@ public class CarController {
     }
 
     @RequestMapping(value = "cars/page", method = RequestMethod.GET)
+    @ApiOperation("分页展示")
     public ServerResponse findCarList(CarSearchParam carSearchParam) {
         return carService.findCarList(carSearchParam);
     }
 
     @PostMapping("cars/addBatch")
+    @ApiOperation("批量添加车")
     public ServerResponse addBatchCar(@RequestBody List<Car> car) {
         return carService.addBatchCar(car);
     }
 
     @RequestMapping(value = "cars", method = RequestMethod.GET)
+    @ApiOperation("条件查询")
     public ServerResponse findSerchCar(CarSearchParam carSearchParam) {
         return carService.findSerchCar(carSearchParam);
     }
 
     @RequestMapping(value = "cars/info", method = RequestMethod.POST)
+    @ApiOperation("增加车")
     public ServerResponse addCar(@RequestBody Car car) {
         return carService.addCar(car);
     }
@@ -98,6 +116,7 @@ public class CarController {
     }
 
     @RequestMapping(value = "cars/{id}", method = RequestMethod.DELETE)
+
     public ServerResponse deleteCar(@PathVariable("id") Long id) {
         return carService.deleteCar(id);
     }
@@ -113,11 +132,16 @@ public class CarController {
     }
 
     @RequestMapping(value = "cars", method = RequestMethod.DELETE)
+    @ApiOperation("批量删除车")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids",value = "需要删除的id",required = true,dataType = "String",paramType = "path")
+    })
     public ServerResponse deleteBatchCar(String ids) {
         return carService.deleteBatchCar(ids);
     }
 
     @GetMapping("cars/findCount")
+    @ApiOperation("购物车总条数")
     public ServerResponse findCarCount() {
         return carService.findCarCount();
     }
@@ -134,8 +158,27 @@ public class CarController {
 
     @PostMapping("/deleteCart")
     @Check
+    @ApiOperation("删除购物车中的商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="x-auth",value="登录后的头信息",required = true,dataType = "String",paramType = "header"),
+            @ApiImplicitParam(name = "goodsids",value = "需要删除的id",required = true,dataType = "String",paramType = "path")
+    })
     public ServerResponse deleteCart(String goodsids) {
 
         return carService.deleteCart(goodsids);
     }
+
+    @GetMapping("/queryPayList")
+    @ApiOperation("获取购物车中的商品生成订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="x-auth",value="登录后的头信息",required = true,dataType = "String",paramType = "header"),
+    })
+   @Check
+    public ServerResponse queryPayList(HttpServletRequest request){
+        MemberVo memberVo = (MemberVo) request.getAttribute(SystemConstant.CURRENT_MEMBER);
+        Long id = memberVo.getId();
+        Map<String,Object> carKey = carService.getCarKey(id);
+        return ServerResponse.success(carKey);
+    }
+
 }

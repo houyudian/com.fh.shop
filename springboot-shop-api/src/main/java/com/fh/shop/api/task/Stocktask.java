@@ -19,7 +19,7 @@ public class Stocktask {
     @Resource
     private GoodsService goodsService;
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+   @Scheduled(cron = "0 0 1 * * ?")
     public void checkStock() {
         System.out.println("-====" + new Date());
 
@@ -43,7 +43,7 @@ public class Stocktask {
                     "    </tr>");
         });
         result.append("</tbody></table>");
-        mailUtil.sendMail("389168944@qq.com", "库存不足提示", result.toString());
+     //  mailUtil.sendMail("389168944@qq.com", "库存不足提示(哈喽我来看你了)", result.toString());
     }
 
 }

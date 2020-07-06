@@ -2,7 +2,16 @@ package com.fh.shop.api.common;
 
 public enum ResponseEnum {
 
-    CAR_GOODS_NUM_IS_ERROR(5004, "商品数量错误"),
+    IDEMPOTENT_TOKEN_MISS(6666, "幂等性判断，头丢失"),
+    IDEMPOTENT_REQUEST_REPET(6667, "幂等性判断，头丢失"),
+    IDEMPOTENT_TOKEN_NOT_EXIST(6668, "token不存在"),
+    ORDER_IS_LESS(4001, "库存不足，下单失败"),
+    ORDER_IS_CREATE_FAIL(4002, "订单创建失败，系统异常"),
+    ORDER_IS_QUEUE(4003, "订单在排队中"),
+    ORDER_PAY_TIME_OUT(7777, "订单支付超时"),
+
+    CAR_GOODS_NUM_IS_ERROR(5008, "商品数量错误"),
+    CRATER_PAY_ERROR(5009, "生成支付二维码失败"),
     CAR_GOODS_IS_NULL(5004, "商品信息为空"),
     CAR_GOODS_IS_DOWN(5005, "商品已下架"),
     CAR_GOODS_IS_(5006, "商品信息为空"),

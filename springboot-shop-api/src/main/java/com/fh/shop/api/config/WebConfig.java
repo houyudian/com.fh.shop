@@ -1,5 +1,6 @@
 package com.fh.shop.api.config;
 
+import com.fh.shop.api.interceptor.IdempotentInterceptor;
 import com.fh.shop.api.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 给springboot注册一个loginInterceptor拦截器，并且拦截/**，即拦截所有资源
-        registry.addInterceptor(loginInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(loginInterceptor()).addPathPatterns("/api/**");
+        registry.addInterceptor(idempotentInterceptor()).addPathPatterns("/api/**");
     }
 
     /**
@@ -22,5 +24,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public LoginInterceptor loginInterceptor() {
         return new LoginInterceptor();
+    }
+    @Bean
+    public IdempotentInterceptor idempotentInterceptor() {
+        return new IdempotentInterceptor();
     }
 }
